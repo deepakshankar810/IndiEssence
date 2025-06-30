@@ -1,36 +1,25 @@
-export interface TouristPlace {
-  name: string;
-  id: string;
-  description: string;
-  history: string;
-  bestTimeToVisit: string;
-  howToReach: string;
-  nearbyAttractions: string[];
-  specialFeatures: string[];
-  entryFee?: string;
-  timings?: string;
-  images: string[];
-  category: 'heritage' | 'nature' | 'religious' | 'modern' | 'adventure' | 'cultural';
-}
-
 export interface StateData {
-  name: string;
   id: string;
+  name: string;
   capital: string;
-  famousFor: string;
-  culturalEssence: string;
+  language: {
+    language: string;
+    phrase: string;
+    meaning: string;
+  };
   dish: {
     name: string;
     description: string;
   };
-  language: {
-    phrase: string;
-    meaning: string;
-    language: string;
-  };
+  famousFor: string;
+  culturalEssence: string;
   stereotype: {
     myth: string;
     reality: string;
+  };
+  dayInLife: {
+    urban: string;
+    rural: string;
   };
   festivals: {
     spring: string;
@@ -38,10 +27,12 @@ export interface StateData {
     monsoon: string;
     winter: string;
   };
-  dayInLife: {
-    urban: string;
-    rural: string;
-  };
-  touristPlaces: TouristPlace[];
+  touristPlaces: Array<{
+    id: string;
+    name: string;
+    description: string;
+    category: string;
+    bestTimeToVisit: string;
+  }>;
   color: string;
 }
