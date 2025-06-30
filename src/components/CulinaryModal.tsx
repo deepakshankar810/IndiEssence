@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Coffee, ArrowRight, MapPin, Clock, ChefHat, Flame } from 'lucide-react';
+import { statesData } from '../data/statesData';
 
 interface Dish {
   id: string;
@@ -21,141 +22,91 @@ interface CulinaryModalProps {
   onExploreState: (stateName: string) => void;
 }
 
-const allDishes: Dish[] = [
-  {
-    id: 'chettinad-chicken',
-    name: "Chettinad Chicken",
-    state: "Tamil Nadu",
-    category: "Spicy Curry",
-    story: "A fiery curry with 20+ spices that tells the story of ancient spice traders...",
-    fullStory: "In the heart of Tamil Nadu's Chettinad region, wealthy merchant families created this legendary dish using spices from their global trade routes. Each family guarded their unique spice blend, passed down through generations. The dish represents the prosperity and cosmopolitan nature of Chettinad merchants who brought flavors from across the world to create something uniquely Tamil. The complex layering of spices - from star anise to stone flower - creates a symphony of flavors that dance on your palate.",
-    spiceLevel: 5,
-    cookTime: "45 mins",
-    region: "South India",
-    ingredients: ["Chicken", "Coconut", "Red Chilies", "Coriander", "Fennel", "Star Anise", "Stone Flower"],
-    culturalSignificance: "Symbol of Chettinad merchant prosperity and global spice trade heritage"
-  },
-  {
-    id: 'machher-jhol',
-    name: "Machher Jhol",
-    state: "West Bengal",
-    category: "Fish Curry",
-    story: "A delicate fish curry that captures the essence of Bengali home cooking...",
-    fullStory: "In Bengali households, Machher Jhol is more than a dish - it's an emotion. This light, turmeric-tinted fish curry represents the soul of Bengali cuisine. Made with fresh river fish, it's cooked with minimal spices to let the fish's natural flavors shine. The dish reflects Bengal's geography - a land crisscrossed by rivers where fish is not just food but culture. Every Bengali mother has her own secret to the perfect jhol, often involving the precise balance of turmeric, ginger, and green chilies.",
-    spiceLevel: 2,
-    cookTime: "30 mins",
-    region: "East India",
-    ingredients: ["Fresh Fish", "Turmeric", "Ginger", "Green Chilies", "Tomatoes", "Mustard Oil"],
-    culturalSignificance: "Represents Bengali home cooking and the river culture of Bengal"
-  },
-  {
-    id: 'vada-pav',
-    name: "Vada Pav",
-    state: "Maharashtra",
-    category: "Street Food",
-    story: "Mumbai's beloved street food that represents the spirit of the city...",
-    fullStory: "Born in the 1960s outside Dadar railway station, Vada Pav became Mumbai's answer to fast food. Created by Ashok Vaidya, this 'Indian burger' was designed for the city's mill workers who needed quick, affordable, and filling food. The deep-fried potato dumpling in a bun, served with spicy chutneys, represents Mumbai's democratic spirit - rich or poor, everyone eats Vada Pav. It's the taste of Mumbai's hustle, the flavor of dreams, and the comfort food of millions who call this city home.",
-    spiceLevel: 3,
-    cookTime: "20 mins",
-    region: "West India",
-    ingredients: ["Potatoes", "Gram Flour", "Pav Bread", "Green Chilies", "Garlic Chutney", "Tamarind Chutney"],
-    culturalSignificance: "Symbol of Mumbai's working-class spirit and democratic food culture"
-  },
-  {
-    id: 'dal-baati-churma',
-    name: "Dal Baati Churma",
-    state: "Rajasthan",
-    category: "Traditional Meal",
-    story: "A hearty meal that showcases Rajasthan's resourceful desert cuisine...",
-    fullStory: "In Rajasthan's harsh desert landscape, Dal Baati Churma represents culinary ingenuity. The hard wheat balls (baati) were originally designed for travelers and warriors - they could be buried in sand and cooked using dried dung, requiring minimal water. The dal provides protein, while churma (sweetened crushed wheat) offers energy for desert life. This complete meal reflects Rajasthani hospitality - guests are served with ghee poured generously over baati, symbolizing abundance despite the desert's scarcity.",
-    spiceLevel: 3,
-    cookTime: "90 mins",
-    region: "West India",
-    ingredients: ["Wheat Flour", "Lentils", "Jaggery", "Ghee", "Spices", "Dried Fruits"],
-    culturalSignificance: "Represents Rajasthani hospitality and desert survival ingenuity"
-  },
-  {
-    id: 'kerala-sadhya',
-    name: "Kerala Sadhya",
-    state: "Kerala",
-    category: "Festival Feast",
-    story: "A vegetarian feast that embodies Kerala's philosophy of balance and community...",
-    fullStory: "The Kerala Sadhya is a symphony of flavors served on a banana leaf, representing the state's biodiversity and culinary philosophy. With over 20 dishes, each has a specific place and purpose - from the tangy rasam that aids digestion to the sweet payasam that concludes the meal. Traditionally served during Onam, it brings communities together regardless of caste or creed. The meal follows Ayurvedic principles, balancing six tastes and ensuring nutritional completeness. Eating with hands from a banana leaf connects diners to nature and tradition.",
-    spiceLevel: 2,
-    cookTime: "4 hours",
-    region: "South India",
-    ingredients: ["Rice", "Coconut", "Vegetables", "Lentils", "Tamarind", "Curry Leaves", "Jaggery"],
-    culturalSignificance: "Embodies Kerala's secular values and Ayurvedic food philosophy"
-  },
-  {
-    id: 'rogan-josh',
-    name: "Rogan Josh",
-    state: "Jammu and Kashmir",
-    category: "Aromatic Curry",
-    story: "A royal Kashmiri dish that reflects the valley's Persian influences...",
-    fullStory: "Rogan Josh arrived in Kashmir with Persian cooks in the 14th century, but Kashmiri cooks made it their own. The dish gets its distinctive red color not from tomatoes, but from dried Kashmiri chilies and cockscomb flowers. Cooked slowly with yogurt and aromatic spices, it represents the sophistication of Kashmiri cuisine. The name means 'red juice' in Persian, but in Kashmir, it became a symbol of celebration - served at weddings and festivals, representing the warmth of Kashmiri hospitality even in the coldest winters.",
-    spiceLevel: 3,
-    cookTime: "75 mins",
-    region: "North India",
-    ingredients: ["Mutton", "Yogurt", "Kashmiri Chilies", "Fennel", "Ginger", "Garlic", "Saffron"],
-    culturalSignificance: "Represents Kashmir's Persian heritage and royal culinary traditions"
-  },
-  {
-    id: 'dhokla',
-    name: "Dhokla",
-    state: "Gujarat",
-    category: "Steamed Snack",
-    story: "A light, fluffy snack that embodies Gujarat's vegetarian culinary genius...",
-    fullStory: "Dhokla is Gujarat's gift to healthy eating - a fermented, steamed cake that's both nutritious and delicious. Made from gram flour and fermented overnight, it represents the Gujarati philosophy of 'simple living, high thinking.' The dish reflects the community's Jain influences, being completely vegetarian and made without root vegetables. Served with green chutney and sweet tamarind sauce, dhokla is often the first food offered to guests, symbolizing the Gujarati tradition of treating guests as gods.",
-    spiceLevel: 1,
-    cookTime: "30 mins",
-    region: "West India",
-    ingredients: ["Gram Flour", "Yogurt", "Ginger", "Green Chilies", "Mustard Seeds", "Curry Leaves"],
-    culturalSignificance: "Embodies Gujarati hospitality and Jain culinary principles"
-  },
-  {
-    id: 'litti-chokha',
-    name: "Litti Chokha",
-    state: "Bihar",
-    category: "Rustic Meal",
-    story: "A humble dish that represents the heart of Bihari cuisine...",
-    fullStory: "Litti Chokha is Bihar's soul food - wheat balls stuffed with roasted gram flour, served with mashed vegetables. This dish tells the story of Bihar's agricultural heritage, where farmers needed portable, nutritious meals for long days in the fields. The litti is traditionally cooked over cow dung cakes, giving it a unique smoky flavor. Chokha, made from roasted eggplant, tomatoes, and potatoes, represents the abundance of Bihar's fertile plains. Together, they create a meal that's both humble and deeply satisfying.",
-    spiceLevel: 2,
-    cookTime: "60 mins",
-    region: "East India",
-    ingredients: ["Wheat Flour", "Sattu", "Eggplant", "Tomatoes", "Potatoes", "Mustard Oil"],
-    culturalSignificance: "Represents Bihar's agricultural heritage and rural food traditions"
-  },
-  {
-    id: 'fish-curry-goa',
-    name: "Goan Fish Curry",
-    state: "Goa",
-    category: "Coastal Curry",
-    story: "A coconut-based curry that blends Indian spices with Portuguese influences...",
-    fullStory: "Goan Fish Curry is a beautiful fusion of Indian and Portuguese culinary traditions. The Portuguese introduced tomatoes and vinegar, while local cooks added coconut milk and kokum for tanginess. This curry represents Goa's unique position as a cultural bridge between East and West. Made with fresh catch from the Arabian Sea, it's traditionally served with rice at every Goan meal. The dish embodies the laid-back Goan lifestyle - simple ingredients transformed into something extraordinary through patience and love.",
-    spiceLevel: 3,
-    cookTime: "25 mins",
-    region: "West India",
-    ingredients: ["Fresh Fish", "Coconut Milk", "Kokum", "Turmeric", "Red Chilies", "Onions"],
-    culturalSignificance: "Represents Goa's unique Indo-Portuguese cultural fusion"
-  },
-  {
-    id: 'bamboo-shoot-curry',
-    name: "Bamboo Shoot Curry",
-    state: "Nagaland",
-    category: "Tribal Delicacy",
-    story: "A traditional Naga dish that showcases the region's forest-to-table cuisine...",
-    fullStory: "In Nagaland's hills, bamboo shoots are more than food - they're a way of life. This curry represents the Naga people's deep connection with their forests. The shoots are fermented for months, developing a unique umami flavor that's central to Naga cuisine. Cooked with minimal spices to preserve the natural taste, it reflects the Naga philosophy of living in harmony with nature. Each tribe has its own variation, but all share the common thread of respecting the forest's bounty and using every part of the bamboo plant.",
-    spiceLevel: 2,
-    cookTime: "40 mins",
-    region: "Northeast India",
-    ingredients: ["Bamboo Shoots", "Pork", "Ginger", "Garlic", "Local Herbs", "Fermented Fish"],
-    culturalSignificance: "Represents Naga tribal connection with forest ecosystems"
-  }
-];
+// Generate dynamic dishes from statesData
+const generateDynamicDishes = (): Dish[] => {
+  const dishes: Dish[] = [];
+  
+  statesData.forEach(state => {
+    // Determine spice level based on region and state
+    const getSpiceLevel = (stateName: string): number => {
+      const spicyStates = ['Andhra Pradesh', 'Telangana', 'Tamil Nadu', 'Rajasthan', 'Gujarat'];
+      const mediumSpiceStates = ['Maharashtra', 'Karnataka', 'Madhya Pradesh', 'Uttar Pradesh'];
+      const mildStates = ['Kerala', 'West Bengal', 'Punjab', 'Himachal Pradesh'];
+      
+      if (spicyStates.includes(stateName)) return Math.floor(Math.random() * 2) + 4; // 4-5
+      if (mediumSpiceStates.includes(stateName)) return Math.floor(Math.random() * 2) + 3; // 3-4
+      if (mildStates.includes(stateName)) return Math.floor(Math.random() * 2) + 2; // 2-3
+      return Math.floor(Math.random() * 3) + 2; // 2-4
+    };
 
-// Function to shuffle array and get random selection
+    // Determine cook time based on dish complexity
+    const getCookTime = (): string => {
+      const times = ["30 mins", "45 mins", "60 mins", "90 mins", "2 hours"];
+      return times[Math.floor(Math.random() * times.length)];
+    };
+
+    // Generate ingredients based on region
+    const getIngredients = (stateName: string): string[] => {
+      const baseIngredients = ["Rice", "Lentils", "Onions", "Garlic", "Ginger"];
+      const regionalIngredients: { [key: string]: string[] } = {
+        'South India': ["Coconut", "Curry Leaves", "Tamarind", "Mustard Seeds", "Turmeric"],
+        'North India': ["Wheat", "Yogurt", "Cumin", "Coriander", "Garam Masala"],
+        'West India': ["Jaggery", "Peanuts", "Sesame", "Kokum", "Cashews"],
+        'East India': ["Mustard Oil", "Panch Phoron", "Fish", "Poppy Seeds", "Hilsa"],
+        'Northeast India': ["Bamboo Shoots", "Fermented Fish", "Local Herbs", "Chilies", "Ginger"]
+      };
+      
+      const region = getRegion(stateName);
+      const regional = regionalIngredients[region] || regionalIngredients['North India'];
+      return [...baseIngredients.slice(0, 3), ...regional.slice(0, 4)];
+    };
+
+    dishes.push({
+      id: `dish-${state.id}`,
+      name: state.dish.name,
+      state: state.name,
+      category: getCategoryFromDish(state.dish.name),
+      story: `A beloved dish from ${state.name} that represents the culinary heritage of the region...`,
+      fullStory: `${state.dish.description} This dish is deeply rooted in the cultural traditions of ${state.name}, where it has been prepared for generations. The recipe reflects the local ingredients, climate, and cultural influences that have shaped the cuisine of this region. Every family has their own variation, passed down through generations, making each preparation unique while maintaining the authentic flavors that define ${state.name}'s culinary identity.`,
+      spiceLevel: getSpiceLevel(state.name),
+      cookTime: getCookTime(),
+      region: getRegion(state.name),
+      ingredients: getIngredients(state.name),
+      culturalSignificance: `Represents the culinary heritage and cultural identity of ${state.name}, often served during festivals and special occasions.`
+    });
+  });
+
+  return dishes;
+};
+
+// Helper functions
+function getRegion(stateName: string): string {
+  const northStates = ['Punjab', 'Haryana', 'Himachal Pradesh', 'Uttarakhand', 'Uttar Pradesh', 'Delhi', 'Jammu and Kashmir', 'Ladakh', 'Chandigarh'];
+  const southStates = ['Tamil Nadu', 'Kerala', 'Karnataka', 'Andhra Pradesh', 'Telangana', 'Puducherry'];
+  const eastStates = ['West Bengal', 'Odisha', 'Bihar', 'Jharkhand'];
+  const westStates = ['Maharashtra', 'Gujarat', 'Rajasthan', 'Goa', 'Madhya Pradesh', 'Chhattisgarh', 'Dadra & Nagar Haveli and Daman & Diu'];
+  const northeastStates = ['Assam', 'Arunachal Pradesh', 'Nagaland', 'Manipur', 'Mizoram', 'Tripura', 'Meghalaya', 'Sikkim'];
+
+  if (northStates.includes(stateName)) return 'North India';
+  if (southStates.includes(stateName)) return 'South India';
+  if (eastStates.includes(stateName)) return 'East India';
+  if (westStates.includes(stateName)) return 'West India';
+  if (northeastStates.includes(stateName)) return 'Northeast India';
+  return 'India';
+}
+
+function getCategoryFromDish(dishName: string): string {
+  const categories = [
+    "Traditional Curry", "Rice Dish", "Bread & Curry", "Street Food", 
+    "Festival Special", "Royal Cuisine", "Comfort Food", "Spicy Delicacy",
+    "Sweet Treat", "Healthy Bowl", "Fermented Delight", "Grilled Special"
+  ];
+  return categories[Math.floor(Math.random() * categories.length)];
+}
+
+// Function to get random dishes
 const getRandomDishes = (count: number = 5): Dish[] => {
+  const allDishes = generateDynamicDishes();
   const shuffled = [...allDishes].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count);
 };

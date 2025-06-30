@@ -16,14 +16,17 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
   
-  // Modal states
+  // Modal states with refresh keys to force re-randomization
   const [quizModalOpen, setQuizModalOpen] = useState(false);
   const [storiesModalOpen, setStoriesModalOpen] = useState(false);
   const [culinaryModalOpen, setCulinaryModalOpen] = useState(false);
   const [quickFactsModalOpen, setQuickFactsModalOpen] = useState(false);
   
-  // Quiz refresh key to force re-randomization
+  // Refresh keys to force re-randomization
   const [quizRefreshKey, setQuizRefreshKey] = useState(0);
+  const [storiesRefreshKey, setStoriesRefreshKey] = useState(0);
+  const [culinaryRefreshKey, setCulinaryRefreshKey] = useState(0);
+  const [quickFactsRefreshKey, setQuickFactsRefreshKey] = useState(0);
 
   const handleStateClick = (state: StateData) => {
     setSelectedState(state);
@@ -110,8 +113,8 @@ export default function App() {
   // Enhanced Surprise Me with proper randomization
   const handleSurpriseMe = () => {
     // Create a shuffled copy of all states to ensure true randomization
-    const shuffledStates = [...statesData].sort(() => Math.random() - 0.5);
-    const randomState = shuffledStates[0];
+    const shuffled = [...statesData].sort(() => Math.random() - 0.5);
+    const randomState = shuffled[0];
     handleStateClick(randomState);
   };
 
@@ -122,10 +125,25 @@ export default function App() {
     }
   };
 
-  // Enhanced Quiz Modal opening with refresh
+  // Enhanced Modal opening functions with refresh
   const handleOpenQuiz = () => {
-    setQuizRefreshKey(prev => prev + 1); // Force quiz to refresh questions
+    setQuizRefreshKey(prev => prev + 1);
     setQuizModalOpen(true);
+  };
+
+  const handleOpenStories = () => {
+    setStoriesRefreshKey(prev => prev + 1);
+    setStoriesModalOpen(true);
+  };
+
+  const handleOpenCulinary = () => {
+    setCulinaryRefreshKey(prev => prev + 1);
+    setCulinaryModalOpen(true);
+  };
+
+  const handleOpenQuickFacts = () => {
+    setQuickFactsRefreshKey(prev => prev + 1);
+    setQuickFactsModalOpen(true);
   };
 
   if (selectedPlace && selectedState) {
@@ -174,7 +192,7 @@ export default function App() {
             
             <div className="hidden md:flex items-center space-x-4">
               <button 
-                onClick={() => setQuickFactsModalOpen(true)}
+                onClick={handleOpenQuickFacts}
                 className="relative group"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full blur-sm opacity-75 group-hover:opacity-100 transition-opacity"></div>
@@ -210,7 +228,7 @@ export default function App() {
             <div className="px-6 py-6 space-y-4">
               <button 
                 onClick={() => {
-                  setQuickFactsModalOpen(true);
+                  handleOpenQuickFacts();
                   setMobileMenuOpen(false);
                 }}
                 className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-8 py-3 rounded-full font-semibold flex items-center justify-center space-x-2"
@@ -392,7 +410,7 @@ export default function App() {
             <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-20">
               {/* Cultural Stories */}
               <div 
-                onClick={() => setStoriesModalOpen(true)}
+                onClick={handleOpenStories}
                 className="group bg-gradient-to-br from-emerald-500/10 to-green-500/10 backdrop-blur-sm rounded-3xl p-10 border border-emerald-500/20 hover:border-emerald-400/40 transition-all duration-500 hover:-translate-y-2 cursor-pointer"
               >
                 <div className="flex items-center mb-6">
@@ -415,7 +433,7 @@ export default function App() {
 
               {/* Food Journey */}
               <div 
-                onClick={() => setCulinaryModalOpen(true)}
+                onClick={handleOpenCulinary}
                 className="group bg-gradient-to-br from-violet-500/10 to-purple-500/10 backdrop-blur-sm rounded-3xl p-10 border border-violet-500/20 hover:border-violet-400/40 transition-all duration-500 hover:-translate-y-2 cursor-pointer"
               >
                 <div className="flex items-center mb-6">
@@ -513,7 +531,7 @@ export default function App() {
         </div>
       </footer>
 
-      {/* Modals */}
+      {/* Modals with refresh keys */}
       <QuizModal 
         key={quizRefreshKey}
         isOpen={quizModalOpen} 
@@ -522,18 +540,21 @@ export default function App() {
       />
       
       <CulturalStoriesModal 
+        key={storiesRefreshKey}
         isOpen={storiesModalOpen} 
         onClose={() => setStoriesModalOpen(false)}
         onExploreState={handleExploreStateFromModal}
       />
       
       <CulinaryModal 
+        key={culinaryRefreshKey}
         isOpen={culinaryModalOpen} 
         onClose={() => setCulinaryModalOpen(false)}
         onExploreState={handleExploreStateFromModal}
       />
       
       <QuickFactsModal 
+        key={quickFactsRefreshKey}
         isOpen={quickFactsModalOpen} 
         onClose={() => setQuickFactsModalOpen(false)}
         onExploreState={handleExploreStateFromModal}

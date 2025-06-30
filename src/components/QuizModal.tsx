@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Award, CheckCircle, XCircle, ArrowRight, Trophy, Star } from 'lucide-react';
+import { statesData } from '../data/statesData';
 
 interface QuizQuestion {
   question: string;
@@ -15,223 +16,78 @@ interface QuizModalProps {
   onExploreState: (stateName: string) => void;
 }
 
-// Expanded quiz questions covering all 36 regions
-const allQuizQuestions: QuizQuestion[] = [
-  {
-    question: "Which state is famous for Dal Baati Churma?",
-    options: ["Rajasthan", "Gujarat", "Madhya Pradesh", "Uttar Pradesh"],
-    correct: 0,
-    state: "Rajasthan",
-    explanation: "Dal Baati Churma is the signature dish of Rajasthan, representing the desert state's resourceful cuisine."
-  },
-  {
-    question: "What is the traditional greeting in Kerala?",
-    options: ["Namaste", "Namaskar", "Namaskaram", "Vanakkam"],
-    correct: 2,
-    state: "Kerala",
-    explanation: "Namaskaram is the traditional Malayalam greeting meaning 'I bow to you' with joined palms."
-  },
-  {
-    question: "Which state celebrates Baisakhi as a major festival?",
-    options: ["Haryana", "Punjab", "Himachal Pradesh", "Uttarakhand"],
-    correct: 1,
-    state: "Punjab",
-    explanation: "Baisakhi is Punjab's harvest festival and also marks the Sikh New Year."
-  },
-  {
-    question: "Meenakshi Temple is located in which state?",
-    options: ["Kerala", "Karnataka", "Tamil Nadu", "Andhra Pradesh"],
-    correct: 2,
-    state: "Tamil Nadu",
-    explanation: "The magnificent Meenakshi Temple with its colorful gopurams is in Madurai, Tamil Nadu."
-  },
-  {
-    question: "Which state is known as 'God's Own Country'?",
-    options: ["Goa", "Kerala", "Himachal Pradesh", "Uttarakhand"],
-    correct: 1,
-    state: "Kerala",
-    explanation: "Kerala is famously called 'God's Own Country' for its natural beauty and backwaters."
-  },
-  {
-    question: "Vada Pav originated in which state?",
-    options: ["Gujarat", "Maharashtra", "Karnataka", "Goa"],
-    correct: 1,
-    state: "Maharashtra",
-    explanation: "Vada Pav was invented in Mumbai, Maharashtra in the 1960s and became the city's signature street food."
-  },
-  {
-    question: "Which state is famous for Rogan Josh?",
-    options: ["Punjab", "Himachal Pradesh", "Jammu and Kashmir", "Uttarakhand"],
-    correct: 2,
-    state: "Jammu and Kashmir",
-    explanation: "Rogan Josh is a signature Kashmiri dish with Persian influences, known for its aromatic spices."
-  },
-  {
-    question: "Dhokla is a traditional dish from which state?",
-    options: ["Rajasthan", "Gujarat", "Maharashtra", "Madhya Pradesh"],
-    correct: 1,
-    state: "Gujarat",
-    explanation: "Dhokla is Gujarat's famous steamed snack made from fermented gram flour."
-  },
-  {
-    question: "Which state is known for Litti Chokha?",
-    options: ["Bihar", "Jharkhand", "West Bengal", "Odisha"],
-    correct: 0,
-    state: "Bihar",
-    explanation: "Litti Chokha is Bihar's traditional dish - wheat balls stuffed with sattu served with mashed vegetables."
-  },
-  {
-    question: "Hornbill Festival is celebrated in which state?",
-    options: ["Assam", "Nagaland", "Manipur", "Mizoram"],
-    correct: 1,
-    state: "Nagaland",
-    explanation: "Hornbill Festival is Nagaland's festival of festivals, showcasing all 16 tribal cultures."
-  },
-  {
-    question: "Which union territory is known for its French colonial heritage?",
-    options: ["Chandigarh", "Puducherry", "Daman and Diu", "Lakshadweep"],
-    correct: 1,
-    state: "Puducherry",
-    explanation: "Puducherry (formerly Pondicherry) was a French colony and retains its colonial architecture and culture."
-  },
-  {
-    question: "Bamboo shoot curry is a traditional dish from which state?",
-    options: ["Assam", "Nagaland", "Manipur", "Arunachal Pradesh"],
-    correct: 1,
-    state: "Nagaland",
-    explanation: "Bamboo shoot curry is a staple in Naga cuisine, representing their forest-to-table food culture."
-  },
-  {
-    question: "Which state is famous for its tea gardens?",
-    options: ["West Bengal", "Assam", "Sikkim", "Meghalaya"],
-    correct: 1,
-    state: "Assam",
-    explanation: "Assam produces the world's largest quantity of tea and is famous for its strong, malty Assam tea."
-  },
-  {
-    question: "Goan Fish Curry gets its unique flavor from which ingredient?",
-    options: ["Tamarind", "Kokum", "Vinegar", "Lime"],
-    correct: 1,
-    state: "Goa",
-    explanation: "Kokum gives Goan Fish Curry its distinctive tangy flavor and beautiful color."
-  },
-  {
-    question: "Which state is known as the 'Land of Rising Sun'?",
-    options: ["Assam", "Arunachal Pradesh", "Manipur", "Nagaland"],
-    correct: 1,
-    state: "Arunachal Pradesh",
-    explanation: "Arunachal Pradesh is called the 'Land of Rising Sun' as it receives India's first sunrise."
-  },
-  {
-    question: "Machher Jhol is a signature dish from which state?",
-    options: ["Odisha", "West Bengal", "Assam", "Tripura"],
-    correct: 1,
-    state: "West Bengal",
-    explanation: "Machher Jhol is Bengal's beloved light fish curry, representing the essence of Bengali home cooking."
-  },
-  {
-    question: "Which state is famous for Mysore Pak?",
-    options: ["Tamil Nadu", "Karnataka", "Andhra Pradesh", "Kerala"],
-    correct: 1,
-    state: "Karnataka",
-    explanation: "Mysore Pak originated in the royal kitchens of Mysore Palace in Karnataka."
-  },
-  {
-    question: "Ladakh is known for which type of Buddhism?",
-    options: ["Theravada", "Mahayana", "Tibetan", "Zen"],
-    correct: 2,
-    state: "Ladakh",
-    explanation: "Ladakh follows Tibetan Buddhism with ancient monasteries preserving this spiritual tradition."
-  },
-  {
-    question: "Which state is famous for Chettinad cuisine?",
-    options: ["Kerala", "Tamil Nadu", "Karnataka", "Andhra Pradesh"],
-    correct: 1,
-    state: "Tamil Nadu",
-    explanation: "Chettinad cuisine from Tamil Nadu is known for its complex spice blends and fiery flavors."
-  },
-  {
-    question: "Sundarbans mangrove forests are primarily in which state?",
-    options: ["Odisha", "West Bengal", "Assam", "Andhra Pradesh"],
-    correct: 1,
-    state: "West Bengal",
-    explanation: "The Sundarbans, home to Royal Bengal Tigers, are primarily located in West Bengal."
-  },
-  {
-    question: "Which union territory has Coral Reefs as its main attraction?",
-    options: ["Andaman and Nicobar Islands", "Lakshadweep", "Puducherry", "Daman and Diu"],
-    correct: 1,
-    state: "Lakshadweep",
-    explanation: "Lakshadweep is famous for its pristine coral reefs and crystal-clear lagoons."
-  },
-  {
-    question: "Bihu is the main festival of which state?",
-    options: ["Assam", "West Bengal", "Tripura", "Manipur"],
-    correct: 0,
-    state: "Assam",
-    explanation: "Bihu is Assam's most important festival, celebrating the Assamese New Year and harvest season."
-  },
-  {
-    question: "Which state is known for Hilsa fish?",
-    options: ["Odisha", "West Bengal", "Assam", "Andhra Pradesh"],
-    correct: 1,
-    state: "West Bengal",
-    explanation: "Hilsa fish is considered the king of fish in Bengali cuisine and culture."
-  },
-  {
-    question: "Konark Sun Temple is located in which state?",
-    options: ["West Bengal", "Odisha", "Andhra Pradesh", "Tamil Nadu"],
-    correct: 1,
-    state: "Odisha",
-    explanation: "The magnificent Konark Sun Temple, a UNESCO World Heritage Site, is in Odisha."
-  },
-  {
-    question: "Which state is famous for Pochampally sarees?",
-    options: ["Tamil Nadu", "Karnataka", "Telangana", "Andhra Pradesh"],
-    correct: 2,
-    state: "Telangana",
-    explanation: "Pochampally in Telangana is famous for its traditional ikat weaving technique."
-  },
-  {
-    question: "Kaziranga National Park is in which state?",
-    options: ["Assam", "West Bengal", "Meghalaya", "Arunachal Pradesh"],
-    correct: 0,
-    state: "Assam",
-    explanation: "Kaziranga National Park in Assam is famous for one-horned rhinoceros."
-  },
-  {
-    question: "Which state is known as the 'Spice Garden of India'?",
-    options: ["Tamil Nadu", "Kerala", "Karnataka", "Andhra Pradesh"],
-    correct: 1,
-    state: "Kerala",
-    explanation: "Kerala is called the 'Spice Garden of India' for its historic spice trade and cultivation."
-  },
-  {
-    question: "Pongal is primarily celebrated in which state?",
-    options: ["Kerala", "Karnataka", "Tamil Nadu", "Andhra Pradesh"],
-    correct: 2,
-    state: "Tamil Nadu",
-    explanation: "Pongal is Tamil Nadu's harvest festival, celebrating the sun god and agricultural abundance."
-  },
-  {
-    question: "Which state is famous for Kanchipuram silk sarees?",
-    options: ["Karnataka", "Tamil Nadu", "Kerala", "Andhra Pradesh"],
-    correct: 1,
-    state: "Tamil Nadu",
-    explanation: "Kanchipuram in Tamil Nadu is renowned for its handwoven silk sarees with gold thread work."
-  },
-  {
-    question: "Onam is the major festival of which state?",
-    options: ["Tamil Nadu", "Kerala", "Karnataka", "Goa"],
-    correct: 1,
-    state: "Kerala",
-    explanation: "Onam is Kerala's harvest festival celebrating the return of King Mahabali."
-  }
-];
+// Generate dynamic quiz questions from statesData
+const generateDynamicQuestions = (): QuizQuestion[] => {
+  const questions: QuizQuestion[] = [];
+  
+  statesData.forEach(state => {
+    // Question about state dish
+    const otherDishes = statesData.filter(s => s.id !== state.id).map(s => s.dish.name);
+    const dishOptions = [state.dish.name, ...otherDishes.sort(() => 0.5 - Math.random()).slice(0, 3)].sort(() => 0.5 - Math.random());
+    questions.push({
+      question: `Which dish is famous in ${state.name}?`,
+      options: dishOptions,
+      correct: dishOptions.indexOf(state.dish.name),
+      state: state.name,
+      explanation: `${state.dish.name} is the signature dish of ${state.name}. ${state.dish.description}`
+    });
 
-// Function to get random questions from all regions
+    // Question about state capital
+    const otherCapitals = statesData.filter(s => s.id !== state.id).map(s => s.capital);
+    const capitalOptions = [state.capital, ...otherCapitals.sort(() => 0.5 - Math.random()).slice(0, 3)].sort(() => 0.5 - Math.random());
+    questions.push({
+      question: `What is the capital of ${state.name}?`,
+      options: capitalOptions,
+      correct: capitalOptions.indexOf(state.capital),
+      state: state.name,
+      explanation: `${state.capital} is the capital of ${state.name}. ${state.culturalEssence}`
+    });
+
+    // Question about famous attractions
+    if (state.touristPlaces.length > 0) {
+      const famousPlace = state.touristPlaces[0];
+      const otherPlaces = statesData.filter(s => s.id !== state.id && s.touristPlaces.length > 0)
+        .map(s => s.touristPlaces[0].name);
+      const placeOptions = [famousPlace.name, ...otherPlaces.sort(() => 0.5 - Math.random()).slice(0, 3)].sort(() => 0.5 - Math.random());
+      questions.push({
+        question: `${famousPlace.name} is located in which state?`,
+        options: statesData.filter(s => placeOptions.includes(s.touristPlaces[0]?.name) || s.name === state.name).map(s => s.name).slice(0, 4),
+        correct: statesData.filter(s => placeOptions.includes(s.touristPlaces[0]?.name) || s.name === state.name).map(s => s.name).slice(0, 4).indexOf(state.name),
+        state: state.name,
+        explanation: `${famousPlace.name} is a famous ${famousPlace.category} destination in ${state.name}. ${famousPlace.description}`
+      });
+    }
+
+    // Question about language greeting
+    const otherGreetings = statesData.filter(s => s.id !== state.id).map(s => s.language.phrase);
+    const greetingOptions = [state.language.phrase, ...otherGreetings.sort(() => 0.5 - Math.random()).slice(0, 3)].sort(() => 0.5 - Math.random());
+    questions.push({
+      question: `What does "${state.language.phrase}" mean in ${state.language.language}?`,
+      options: [state.language.meaning, "Good morning", "Thank you", "Welcome"].sort(() => 0.5 - Math.random()),
+      correct: [state.language.meaning, "Good morning", "Thank you", "Welcome"].sort(() => 0.5 - Math.random()).indexOf(state.language.meaning),
+      state: state.name,
+      explanation: `"${state.language.phrase}" means "${state.language.meaning}" in ${state.language.language}, the primary language of ${state.name}.`
+    });
+
+    // Question about what state is famous for
+    const otherFamous = statesData.filter(s => s.id !== state.id).map(s => s.famousFor);
+    const famousOptions = [state.famousFor, ...otherFamous.sort(() => 0.5 - Math.random()).slice(0, 3)].sort(() => 0.5 - Math.random());
+    questions.push({
+      question: `${state.name} is famous for:`,
+      options: famousOptions,
+      correct: famousOptions.indexOf(state.famousFor),
+      state: state.name,
+      explanation: `${state.name} is famous for ${state.famousFor}. ${state.culturalEssence}`
+    });
+  });
+
+  return questions;
+};
+
+// Function to get random questions
 const getRandomQuestions = (count: number = 5): QuizQuestion[] => {
-  const shuffled = [...allQuizQuestions].sort(() => Math.random() - 0.5);
+  const allQuestions = generateDynamicQuestions();
+  const shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, count);
 };
 

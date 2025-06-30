@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, BookOpen, ArrowRight, MapPin, Clock, Users } from 'lucide-react';
+import { statesData } from '../data/statesData';
 
 interface Story {
   id: string;
@@ -18,111 +19,99 @@ interface CulturalStoriesModalProps {
   onExploreState: (stateName: string) => void;
 }
 
-const allStories: Story[] = [
-  {
-    id: 'meenakshi-legend',
-    title: "The Fish-Eyed Goddess of Madurai",
-    state: "Tamil Nadu",
-    category: "Temple Legend",
-    preview: "Discover how Princess Meenakshi became the patron deity of Madurai...",
-    content: "In ancient Madurai, a princess was born with fish-shaped eyes, considered a divine blessing. Princess Meenakshi grew up to be a fierce warrior and just ruler. When she met Lord Shiva in the form of Sundareshwarar, their divine union blessed the city. The magnificent Meenakshi Temple stands as a testament to their eternal love, with its towering gopurams reaching toward the heavens, each sculpture telling stories of devotion and divine grace.",
-    readTime: "3 min read",
-    region: "South India"
-  },
-  {
-    id: 'golden-temple-langar',
-    title: "The World's Largest Kitchen",
-    state: "Punjab",
-    category: "Living Tradition",
-    preview: "Learn about the Golden Temple's langar that serves 100,000+ people daily...",
-    content: "Every day at the Golden Temple, an extraordinary act of service unfolds. The community kitchen, or langar, serves free meals to over 100,000 visitors regardless of their religion, caste, or social status. Volunteers from around the world work together - chopping vegetables, rolling rotis, and serving with love. This 500-year-old tradition embodies the Sikh principles of equality, service, and sharing, making it the world's largest free kitchen.",
-    readTime: "4 min read",
-    region: "North India"
-  },
-  {
-    id: 'backwater-villages',
-    title: "Life on Kerala's Liquid Highways",
-    state: "Kerala",
-    category: "Living Culture",
-    preview: "Explore how communities have lived in harmony with water for centuries...",
-    content: "In Kerala's backwaters, entire communities have built their lives around water. Families wake up to the gentle lapping of waves against their homes built on stilts. Children learn to swim before they walk, and the daily commute happens by canoe. These waterways serve as highways, connecting villages where ancient traditions of fishing, coir making, and boat building continue. The backwaters aren't just tourist attractions - they're living ecosystems where humans and nature exist in perfect harmony.",
-    readTime: "5 min read",
-    region: "South India"
-  },
-  {
-    id: 'rajasthan-desert-life',
-    title: "Masters of the Desert",
-    state: "Rajasthan",
-    category: "Desert Culture",
-    preview: "How Rajasthani communities thrived in one of the world's harshest environments...",
-    content: "For centuries, the people of Rajasthan have turned the harsh Thar Desert into their home through ingenious innovations. They built stepwells (baoris) to harvest every drop of rainwater, created architectural marvels that stay cool in 50°C heat, and developed a cuisine that requires minimal water. The desert communities became master traders, their caravans crossing vast distances, creating a culture of hospitality that welcomes strangers as gods. Their colorful festivals and folk music celebrate life's joys despite the desert's challenges.",
-    readTime: "4 min read",
-    region: "West India"
-  },
-  {
-    id: 'bengal-adda-culture',
-    title: "The Art of Bengali Adda",
-    state: "West Bengal",
-    category: "Social Tradition",
-    preview: "Understanding Bengal's unique culture of intellectual conversations...",
-    content: "In Bengal, 'adda' is more than just conversation - it's an art form. Friends gather in tea stalls, park benches, or drawing rooms for hours of passionate discussion about literature, politics, philosophy, and life. These informal gatherings have shaped Bengali intellectual culture for generations. From Nobel laureates to street vendors, everyone participates in adda. It's where ideas are born, friendships are forged, and the Bengali spirit of questioning and creativity flourishes. No topic is off-limits, and every opinion matters.",
-    readTime: "3 min read",
-    region: "East India"
-  },
-  {
-    id: 'ladakh-monasteries',
-    title: "Monasteries in the Clouds",
-    state: "Ladakh",
-    category: "Spiritual Heritage",
-    preview: "Discover the ancient Buddhist monasteries perched high in the Himalayas...",
-    content: "In the remote valleys of Ladakh, ancient monasteries cling to cliffsides like eagles' nests. These gompa have preserved Tibetan Buddhist culture for over a thousand years. Monks wake before dawn to the sound of long horns echoing across valleys, their prayers carried by mountain winds. The monasteries are living libraries, housing ancient texts, thangka paintings, and butter sculptures. Here, time moves differently - measured not in hours but in seasons, not in days but in lifetimes of devotion.",
-    readTime: "4 min read",
-    region: "North India"
-  },
-  {
-    id: 'goa-portuguese-legacy',
-    title: "Where East Meets West",
-    state: "Goa",
-    category: "Colonial Heritage",
-    preview: "Explore how 450 years of Portuguese rule shaped Goan culture...",
-    content: "Goa is a unique blend where Indian spices meet Portuguese flavors, where Hindu temples stand alongside baroque churches. The Portuguese arrived in 1510 and left an indelible mark on Goan culture. Today, you'll find families with Portuguese surnames speaking Konkani, cooking vindaloo (from 'vinha d'alhos'), and celebrating both Christmas and Ganesh Chaturthi with equal fervor. The architecture tells this story - Indo-Portuguese mansions with oyster shell windows, azulejo tiles, and courtyards that echo with fado and mando music.",
-    readTime: "5 min read",
-    region: "West India"
-  },
-  {
-    id: 'assam-tea-gardens',
-    title: "The Tea Gardens of Assam",
-    state: "Assam",
-    category: "Living Heritage",
-    preview: "Journey through the world's largest tea-growing region...",
-    content: "In Assam's rolling hills, generations of tea workers have perfected the art of growing the world's strongest tea. The British established these gardens in the 1800s, bringing workers from across India who created a unique multicultural society. Today, tea gardens are like small towns - with schools, hospitals, and temples. The pluckers, mostly women, move through the bushes with practiced grace, their fingers selecting only the finest 'two leaves and a bud.' Each garden has its own character, its own blend, its own story steeped in tradition.",
-    readTime: "4 min read",
-    region: "Northeast India"
-  },
-  {
-    id: 'kashmir-houseboats',
-    title: "Floating Palaces of Dal Lake",
-    state: "Jammu and Kashmir",
-    category: "Unique Lifestyle",
-    preview: "Experience the unique houseboat culture of Kashmir's Dal Lake...",
-    content: "On Dal Lake in Srinagar, entire families have lived on houseboats for generations. These floating homes, called 'doongas,' are masterpieces of Kashmiri craftsmanship - carved walnut wood, hand-knotted carpets, and papier-mâché decorations. The houseboat owners are storytellers, their families having served travelers for over a century. They know every ripple of the lake, every season's mood. Life here follows the lake's rhythm - morning shikara rides to floating vegetable markets, afternoons watching kingfishers dive, evenings with the call to prayer echoing across the water.",
-    readTime: "5 min read",
-    region: "North India"
-  },
-  {
-    id: 'nagaland-hornbill-festival',
-    title: "The Festival of Festivals",
-    state: "Nagaland",
-    category: "Tribal Culture",
-    preview: "Witness Nagaland's spectacular celebration of tribal diversity...",
-    content: "Every December, Nagaland comes alive with the Hornbill Festival, where all 16 tribes showcase their unique cultures. Named after the revered hornbill bird, this festival is a kaleidoscope of colors, sounds, and traditions. Each tribe brings their distinct dances, songs, and crafts - from the Ao tribe's harvest songs to the Konyak warriors' traditional attire. The festival grounds become a living museum where ancient headhunting tribes now compete in chili-eating contests and rock concerts blend with folk music. It's where tradition meets modernity in the most spectacular way.",
-    readTime: "4 min read",
-    region: "Northeast India"
-  }
-];
+// Generate dynamic stories from statesData
+const generateDynamicStories = (): Story[] => {
+  const stories: Story[] = [];
+  
+  statesData.forEach(state => {
+    // Story about cultural essence
+    stories.push({
+      id: `culture-${state.id}`,
+      title: `The Cultural Heart of ${state.name}`,
+      state: state.name,
+      category: "Cultural Heritage",
+      preview: `Discover the rich cultural tapestry that makes ${state.name} unique...`,
+      content: `${state.culturalEssence} The people of ${state.name} have preserved their traditions while embracing modernity, creating a unique cultural landscape that reflects both ancient wisdom and contemporary aspirations. From their traditional greeting "${state.language.phrase}" meaning "${state.language.meaning}" to their famous ${state.dish.name}, every aspect of life here tells a story of cultural continuity and adaptation.`,
+      readTime: "4 min read",
+      region: getRegion(state.name)
+    });
 
-// Function to shuffle array and get random selection
+    // Story about daily life
+    stories.push({
+      id: `life-${state.id}`,
+      title: `A Day in the Life: ${state.name}`,
+      state: state.name,
+      category: "Living Culture",
+      preview: `Experience how people live, work, and celebrate in ${state.name}...`,
+      content: `In the bustling cities of ${state.name}, ${state.dayInLife.urban} Meanwhile, in the peaceful countryside, ${state.dayInLife.rural} This beautiful contrast between urban dynamism and rural tranquility creates the unique rhythm of life in ${state.name}, where tradition and progress dance together in perfect harmony.`,
+      readTime: "5 min read",
+      region: getRegion(state.name)
+    });
+
+    // Story about breaking stereotypes
+    stories.push({
+      id: `reality-${state.id}`,
+      title: `Beyond Stereotypes: The Real ${state.name}`,
+      state: state.name,
+      category: "Reality Check",
+      preview: `Discover the truth behind common misconceptions about ${state.name}...`,
+      content: `Many people think that ${state.stereotype.myth}, but the reality is far more fascinating. ${state.stereotype.reality} This transformation of perception happens to everyone who takes the time to truly explore ${state.name} - they discover a land that defies easy categorization and reveals new wonders at every turn.`,
+      readTime: "3 min read",
+      region: getRegion(state.name)
+    });
+
+    // Story about festivals and traditions
+    stories.push({
+      id: `festivals-${state.id}`,
+      title: `Festivals Through the Seasons in ${state.name}`,
+      state: state.name,
+      category: "Festivals & Traditions",
+      preview: `Journey through the year-round celebrations that bring ${state.name} to life...`,
+      content: `The calendar in ${state.name} is marked by vibrant celebrations that reflect the changing seasons and the enduring spirit of its people. Spring brings ${state.festivals.spring}, summer celebrates with ${state.festivals.summer}, the monsoons are welcomed with ${state.festivals.monsoon}, and winter concludes the year with ${state.festivals.winter}. Each festival is not just a celebration but a living tradition that connects generations and strengthens community bonds.`,
+      readTime: "4 min read",
+      region: getRegion(state.name)
+    });
+
+    // Story about tourist places if available
+    if (state.touristPlaces.length > 0) {
+      const place = state.touristPlaces[0];
+      stories.push({
+        id: `heritage-${state.id}`,
+        title: `${place.name}: A Jewel of ${state.name}`,
+        state: state.name,
+        category: "Heritage Sites",
+        preview: `Explore the fascinating history and significance of ${place.name}...`,
+        content: `${place.description} ${place.history} Today, ${place.name} stands as a testament to the rich heritage of ${state.name}, attracting visitors from around the world who come to witness its beauty and learn about its significance. The site represents not just architectural brilliance but also the cultural values and artistic achievements of the people of ${state.name}.`,
+        readTime: "6 min read",
+        region: getRegion(state.name)
+      });
+    }
+  });
+
+  return stories;
+};
+
+// Helper function to determine region
+function getRegion(stateName: string): string {
+  const northStates = ['Punjab', 'Haryana', 'Himachal Pradesh', 'Uttarakhand', 'Uttar Pradesh', 'Delhi', 'Jammu and Kashmir', 'Ladakh', 'Chandigarh'];
+  const southStates = ['Tamil Nadu', 'Kerala', 'Karnataka', 'Andhra Pradesh', 'Telangana', 'Puducherry'];
+  const eastStates = ['West Bengal', 'Odisha', 'Bihar', 'Jharkhand'];
+  const westStates = ['Maharashtra', 'Gujarat', 'Rajasthan', 'Goa', 'Madhya Pradesh', 'Chhattisgarh', 'Dadra & Nagar Haveli and Daman & Diu'];
+  const northeastStates = ['Assam', 'Arunachal Pradesh', 'Nagaland', 'Manipur', 'Mizoram', 'Tripura', 'Meghalaya', 'Sikkim'];
+  const islandStates = ['Andaman & Nicobar Islands', 'Lakshadweep'];
+
+  if (northStates.includes(stateName)) return 'North India';
+  if (southStates.includes(stateName)) return 'South India';
+  if (eastStates.includes(stateName)) return 'East India';
+  if (westStates.includes(stateName)) return 'West India';
+  if (northeastStates.includes(stateName)) return 'Northeast India';
+  if (islandStates.includes(stateName)) return 'Island Territories';
+  return 'India';
+}
+
+// Function to get random stories
 const getRandomStories = (count: number = 5): Story[] => {
+  const allStories = generateDynamicStories();
   const shuffled = [...allStories].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count);
 };
