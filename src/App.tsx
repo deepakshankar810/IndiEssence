@@ -647,7 +647,7 @@ function StateDetail({ state, onBack, onPlaceClick, activeSection, setActiveSect
 }) {
   const sections = [
     { id: 'overview', label: 'Overview', icon: Globe },
-    { id: 'heritage', label: 'Heritage', icon: Building },
+    { id: 'culture', label: 'Culture', icon: Building },
     { id: 'destinations', label: 'Destinations', icon: Mountain },
     { id: 'traditions', label: 'Traditions', icon: Calendar }
   ];
@@ -727,7 +727,7 @@ function StateDetail({ state, onBack, onPlaceClick, activeSection, setActiveSect
       <main className="relative z-10 py-20">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           {activeSection === 'overview' && <OverviewSection state={state} />}
-          {activeSection === 'heritage' && <HeritageSection state={state} />}
+          {activeSection === 'culture' && <CultureSection state={state} />}
           {activeSection === 'destinations' && <DestinationsSection state={state} onPlaceClick={onPlaceClick} />}
           {activeSection === 'traditions' && <TraditionsSection state={state} />}
         </div>
@@ -844,7 +844,7 @@ function OverviewSection({ state }: { state: StateData }) {
   );
 }
 
-function HeritageSection({ state }: { state: StateData }) {
+function CultureSection({ state }: { state: StateData }) {
   return (
     <div className="space-y-16">
       <div className="bg-white/5 backdrop-blur-sm rounded-3xl p-12 border border-white/10">
