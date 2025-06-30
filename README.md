@@ -1,1 +1,1 @@
-# IndiEssence by Monica
+# IndiEssence by MonicaGeller
