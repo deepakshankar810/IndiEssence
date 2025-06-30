@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { MapPin, Globe, Heart, Star, ArrowRight, Sparkles, Mountain, Building, Users, Calendar, Menu, X, ChevronRight, Search, Compass, Coffee, BookOpen, Award, Lightbulb, TreePine, Waves, Sun, Snowflake, Zap } from 'lucide-react';
 import { StateData } from './types';
 import { statesData } from './data/statesData';
