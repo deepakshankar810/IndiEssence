@@ -190,12 +190,6 @@ export default function App() {
                     </div>
                     
                     <div className="hidden md:flex items-center space-x-4">
-                      <Link
-                        to="/about"
-                        className="text-gray-400 hover:text-white font-medium transition-colors"
-                      >
-                        About
-                      </Link>
                       <button 
                         onClick={handleOpenQuickFacts}
                         className="relative group"
@@ -231,13 +225,6 @@ export default function App() {
                 {mobileMenuOpen && (
                   <div className="md:hidden bg-black/80 backdrop-blur-xl border-t border-white/10">
                     <div className="px-6 py-6 space-y-4">
-                      <Link
-                        to="/about"
-                        className="block w-full text-gray-400 hover:text-white font-medium transition-colors text-center py-3"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        About
-                      </Link>
                       <button 
                         onClick={() => {
                           handleOpenQuickFacts();
